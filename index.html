@@ -1,21 +1,109 @@
 <html>
-<head>
-	
-</head>
-<body>
-	<script src="https://platform.linkedin.com/in.js" type="text/javascript">
-        api_key: '77exlkseo7gorv'
-         noAuth: true
-         lang: en_US
-         onLoad: somethingAwesome
-    </script>
-    <script>
-        somethingAwesome = function(e){
-        	IN.Event.on(IN, 'systemReady', function() {
-        		console.log(e);
-            });
-        };
-    </script>
-    <script type="IN/Form" data-size="large" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
-</body>
+    <head>
+        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+        <script type="text/javascript" src="https://raw.githack.com/meetselva/attrchange/master/js/attrchange.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/css/bootstrap.min.css">
+        <style>
+        .IN-widget {
+    opacity:0;
+    z-index:1000;
+    position:absolute;
+    right:0;
+    top:0;
+}
+.modal-footer .IN-widget{
+    top:12px;
+}
+input[type="text"] {
+    display:block !important;
+    float:none;
+}
+.modal-header {
+    position:relative;
+}
+.modal-footer {
+    position:relative;
+}
+</style>
+    </head>
+    <body>
+        <div class="modal fade hide" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <script src="https://platform.linkedin.com/in.js" type="text/javascript">
+                    api_key: '77exlkseo7gorv'
+                     noAuth: true
+                     lang: en_US
+                     onLoad: somethingAwesome
+                </script>
+                <script>
+                    somethingAwesome = function(e){
+                        IN.Event.on(IN, 'systemReady', function() {
+                            $(document).bind('mousemove', function(e){
+                                $('.IN-widget').css({
+                                   left:  e.pageX - 20,
+                                   top:   e.pageY - 20
+                                });
+                            });
+                            $("iframe").each(function(){
+                                console.log(this);
+                                var self = this;
+                                $(self).attrchange({
+                                    callback: function (e) {
+                                        if ($(self).height() > 35){
+                                            $(self).remove()
+                                        };        
+                                    }
+                                });
+                            });
+                        });
+                    };
+                </script>
+                <script type="IN/Form" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                 <h3 id="myModalLabel">Signup for our newsletter today!</h3>
+
+            </div>
+            <div class="modal-body">Email Address:
+                <input type="email" placeholder="jane@doe.com" />
+            </div>
+            <div class="modal-footer">
+                <script type="IN/Form" data-size="large" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
+                <button class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+
+        <h2>LinkedIn FormFill Trick</h2>
+
+        <form>
+            <input placeholder="First Name" type="text" id="firstname" />
+            <input placeholder="Last Name" type="text" id="lastname" />
+            <input placeholder="Company" type="text" id="company" />
+            <input placeholder="Phone" type="text" id="phone" />
+            <input placeholder="Email" type="text" id="email" />
+        </form>
+        <script>
+function listener(event) {
+    var parsedInfo = JSON.parse("{" + event.data.substring(event.data.indexOf("{") + 1));
+    if (parsedInfo.method === "widgetSuccess") {
+        console.log(parsedInfo.params[0].data);
+        modal.modal('hide');
+        modal.on('hidden.bs.modal', function (e) {
+            for (var key in parsedInfo.params[0].data) {
+                var val = parsedInfo.params[0].data[key];
+                $("input#" + key).val(val);
+            };
+        });
+    } else {
+        return ""
+    };
+};
+if (window.addEventListener) {
+    addEventListener("message", listener, false)
+} else {
+    attachEvent("onmessage", listener);
+};
+        </script>
+    </body>
 </html>
