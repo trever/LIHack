@@ -1,0 +1,21 @@
+<html>
+<head>
+	
+</head>
+<body>
+	<script src="https://platform.linkedin.com/in.js" type="text/javascript">
+        api_key: '77exlkseo7gorv'
+         noAuth: true
+         lang: en_US
+         onLoad: somethingAwesome
+    </script>
+    <script>
+        somethingAwesome = function(e){
+        	IN.Event.on(IN, 'systemReady', function() {
+        		console.log(e);
+            });
+        };
+    </script>
+    <script type="IN/Form" data-size="large" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
+</body>
+</html>
