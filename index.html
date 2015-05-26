@@ -1,18 +1,9 @@
-<html>
-    <head>
-        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-        <script type="text/javascript" src="https://raw.githack.com/meetselva/attrchange/master/js/attrchange.js"></script>
+<html><head>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.js"></script>
         <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js"></script>
         
         <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/css/bootstrap.min.css">
         <style>
-        .IN-widget {
-    opacity:0;
-    z-index:1000;
-    position:absolute;
-    right:0;
-    top:0;
-}
 .modal-footer .IN-widget{
     top:12px;
 }
@@ -27,49 +18,53 @@ input[type="text"] {
     position:relative;
 }
 </style>
-    </head>
-    <body>
-        <div class="modal fade hide" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</head>
+    <body class="modal-open">
+        <div class="modal fade hide in" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: block;">
             <div class="modal-header">
                 <script src="https://platform.linkedin.com/in.js" type="text/javascript">
-                    api_key: '77exlkseo7gorv'
+                    api_key: 77exlkseo7gorv
                      noAuth: true
                      lang: en_US
                      onLoad: somethingAwesome
                 </script>
                 <script>
                     somethingAwesome = function(e){
+                        console.log('a');
+                        console.log(IN);
                         IN.Event.on(IN, 'systemReady', function() {
-                            $(document).bind('mousemove', function(e){
-                                $('.IN-widget').css({
-                                   left:  e.pageX - 20,
-                                   top:   e.pageY - 20
-                                });
-                            });
-                            $("iframe").each(function(){
-                                console.log(this);
-                                var self = this;
-                                $(self).attrchange({
-                                    callback: function (e) {
-                                        if ($(self).height() > 35){
-                                            $(self).remove()
-                                        };        
-                                    }
+                            window.open = function() {
+                                return
+                            };
+                            window.modal = $('.modal');
+                            modal.modal('show');
+                            modal.on('shown.bs.modal', function(){
+                                console.log($('iframe'));
+                                $("iframe").each(function(){
+                                    console.log(this);
+                                    var self = this;
+                                    $(self).attrchange({
+                                        callback: function (e) {
+                                            if ($(self).height() > 35){
+                                                $(self).remove()
+                                            };        
+                                        }
+                                    });
                                 });
                             });
                         });
                     };
                 </script>
-                <script type="IN/Form" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
+               <script type="IN/Form+init" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                  <h3 id="myModalLabel">Signup for our newsletter today!</h3>
 
             </div>
             <div class="modal-body">Email Address:
-                <input type="email" placeholder="jane@doe.com" />
+                <input type="email" placeholder="jane@doe.com">
             </div>
             <div class="modal-footer">
-                <script type="IN/Form" data-size="large" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
+                <script type="IN/Form+init" data-size="large" data-field-firstname="FirstName" data-field-lastname="LastName" data-field-phone="Phone" data-field-email="Email" data-field-company="Company" data-field-website="Website"></script>
                 <button class="btn btn-primary">Save changes</button>
             </div>
         </div>
@@ -77,11 +72,11 @@ input[type="text"] {
         <h2>LinkedIn FormFill Trick</h2>
 
         <form>
-            <input placeholder="First Name" type="text" id="firstname" />
-            <input placeholder="Last Name" type="text" id="lastname" />
-            <input placeholder="Company" type="text" id="company" />
-            <input placeholder="Phone" type="text" id="phone" />
-            <input placeholder="Email" type="text" id="email" />
+            <input placeholder="First Name" type="text" id="firstname">
+            <input placeholder="Last Name" type="text" id="lastname">
+            <input placeholder="Company" type="text" id="company">
+            <input placeholder="Phone" type="text" id="phone">
+            <input placeholder="Email" type="text" id="email">
         </form>
         <script>
 function listener(event) {
@@ -104,6 +99,6 @@ if (window.addEventListener) {
 } else {
     attachEvent("onmessage", listener);
 };
+(function(e){function t(){var e=document.createElement("p");var t=false;if(e.addEventListener)e.addEventListener("DOMAttrModified",function(){t=true},false);else if(e.attachEvent)e.attachEvent("onDOMAttrModified",function(){t=true});else return false;e.setAttribute("id","target");return t}function n(t,n){if(t){var r=this.data("attr-old-value");if(n.attributeName.indexOf("style")>=0){if(!r["style"])r["style"]={};var i=n.attributeName.split(".");n.attributeName=i[0];n.oldValue=r["style"][i[1]];n.newValue=i[1]+":"+this.prop("style")[e.camelCase(i[1])];r["style"][i[1]]=n.newValue}else{n.oldValue=r[n.attributeName];n.newValue=this.attr(n.attributeName);r[n.attributeName]=n.newValue}this.data("attr-old-value",r)}}var r=window.MutationObserver||window.WebKitMutationObserver;e.fn.attrchange=function(i){var s={trackValues:false,callback:e.noop};if(typeof i==="function"){s.callback=i}else{e.extend(s,i)}if(s.trackValues){e(this).each(function(t,n){var r={};for(var i,t=0,s=n.attributes,o=s.length;t<o;t++){i=s.item(t);r[i.nodeName]=i.value}e(this).data("attr-old-value",r)})}if(r){var o={subtree:false,attributes:true,attributeOldValue:s.trackValues};var u=new r(function(t){t.forEach(function(t){var n=t.target;if(s.trackValues){t.newValue=e(n).attr(t.attributeName)}s.callback.call(n,t)})});return this.each(function(){u.observe(this,o)})}else if(t()){return this.on("DOMAttrModified",function(e){if(e.originalEvent)e=e.originalEvent;e.attributeName=e.attrName;e.oldValue=e.prevValue;s.callback.call(this,e)})}else if("onpropertychange"in document.body){return this.on("propertychange",function(t){t.attributeName=window.event.propertyName;n.call(e(this),s.trackValues,t);s.callback.call(this,t)})}return this}})(jQuery);
         </script>
-    </body>
-</html>
+</body></html>
